@@ -132,8 +132,14 @@ impl DungeonMap {
     ///
     /// `self.rows().flat_map(|row| row.iter())` gives you a flat iterator
     /// over every tile in the map.
+    #[must_use]
     pub fn count_tiles(&self) -> HashMap<Tile, usize> {
-        todo!()
+        self.rows()
+            .flat_map(|row| row.iter())
+            .fold(HashMap::new(), |mut a, tile| {
+                a.insert(*tile, a.get(tile).copied().unwrap_or_default() + 1);
+                a
+            })
     }
 
     /// Returns all positions where `tile` appears, sorted row-first then
