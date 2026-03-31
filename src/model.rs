@@ -118,9 +118,7 @@ impl DungeonMap {
     /// Note: returning `impl Iterator` from a method requires understanding
     /// that the iterator borrows from `&self`.
     pub fn rows(&self) -> impl Iterator<Item = &Vec<Tile>> {
-        // Replace this body with your implementation.
-        // std::iter::empty() is here only so the skeleton compiles.
-        std::iter::empty()
+        self.tiles.iter()
     }
 
     // ── Analysis ──────────────────────────────────────────────────────────────
