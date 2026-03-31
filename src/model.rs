@@ -94,8 +94,11 @@ impl DungeonMap {
     ///
     /// Returns `None` if the position is out of bounds.
     /// The returned reference has the same lifetime as `&self`.
+    #[must_use]
     pub fn get(&self, pos: Position) -> Option<&Tile> {
-        todo!()
+        let (x, y) = pos;
+
+        self.tiles.get(x)?.get(y)
     }
 
     /// Returns the width of the map (number of columns).
