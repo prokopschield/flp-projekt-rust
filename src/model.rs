@@ -54,8 +54,38 @@ impl DungeonMap {
     /// `chars().enumerate()` with `map` and `collect::<Result<Vec<_>, _>>()`.
     /// This pattern propagates errors naturally while building the
     /// `Vec<Vec<Tile>>`.
-    pub fn parse(input: &str) -> Result<DungeonMap, ParseError> {
-        todo!()
+    pub fn parse(input: &str) -> Result<Self, ParseError> {
+        let tiles = input
+            .split('\n')
+            .map(str::trim_end)
+            .filter(|line| !line.is_empty())
+            .map(|line| {
+                line.chars()
+                    .map(Tile::from_char)
+                    .collect::<Result<Vec<Tile>, _>>()
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+
+        let height = tiles.len();
+        let width = tiles.first().ok_or(ParseError::EmptyInput)?.len();
+
+        for (idx, row) in tiles.iter().enumerate() {
+            if row.len() != width {
+                return Err(ParseError::JaggedMap {
+                    row: idx,
+                    expected: width,
+                    found: row.len(),
+                });
+            }
+        }
+
+        let map = Self {
+            tiles,
+            width,
+            height,
+        };
+
+        Ok(map)
     }
 
     // ── Accessors ─────────────────────────────────────────────────────────────
