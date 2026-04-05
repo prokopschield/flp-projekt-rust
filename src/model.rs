@@ -146,8 +146,16 @@ impl DungeonMap {
     /// column (i.e. in reading order).
     ///
     /// Returns an empty `Vec` if the tile does not appear in the map.
+    #[must_use]
     pub fn find_all(&self, tile: Tile) -> Vec<Position> {
-        todo!()
+        self.rows()
+            .enumerate()
+            .flat_map(|(x, row)| {
+                row.iter()
+                    .enumerate()
+                    .filter_map(move |(y, t)| tile.eq(t).then_some((x, y)))
+            })
+            .collect()
     }
 
     // ── Validation ────────────────────────────────────────────────────────────
