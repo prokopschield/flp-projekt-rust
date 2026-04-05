@@ -44,8 +44,18 @@ impl Tile {
     /// Note: the `row` and `col` fields are set to `0` here because this
     /// method does not know the position. `DungeonMap::parse` is responsible
     /// for injecting the correct position into the error before returning it.
-    pub fn from_char(c: char) -> Result<Tile, ParseError> {
-        todo!()
+    pub const fn from_char(c: char) -> Result<Self, ParseError> {
+        match c {
+            '#' => Ok(Self::Wall),
+            '.' => Ok(Self::Floor),
+            '@' => Ok(Self::PlayerStart),
+            'E' => Ok(Self::Enemy),
+            'T' => Ok(Self::Treasure),
+            'X' => Ok(Self::Exit),
+            '+' => Ok(Self::Door),
+            '^' => Ok(Self::Trap),
+            c => Err(ParseError::UnknownTile { c, col: 0, row: 0 }),
+        }
     }
 
     /// Returns `true` if this tile type allows movement through it.
