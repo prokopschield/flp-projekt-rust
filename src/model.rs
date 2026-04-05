@@ -59,9 +59,20 @@ impl DungeonMap {
             .split('\n')
             .map(str::trim_end)
             .filter(|line| !line.is_empty())
-            .map(|line| {
+            .enumerate()
+            .map(|(row, line)| {
                 line.chars()
-                    .map(Tile::from_char)
+                    .enumerate()
+                    .map(|(col, c)| match Tile::from_char(c) {
+                        Ok(tile) => Ok(tile),
+                        Err(ParseError::UnknownTile { c, .. }) => {
+                            Err(ParseError::UnknownTile { c, row, col })
+                        }
+                        Err(other_err) => {
+                            // This case is impossible, but I'm not allowed to change the signature of `Tile::from_char`.
+                            Err(other_err)
+                        }
+                    })
                     .collect::<Result<Vec<Tile>, _>>()
             })
             .collect::<Result<Vec<_>, _>>()?;
