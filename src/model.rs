@@ -167,8 +167,15 @@ impl DungeonMap {
     /// - At least one `Exit` tile exists.
     /// - At least one `Floor` tile exists.
     ///
-    /// Otherwise returns `Err(errors)` where `errors` is a `Vec` containing
-    /// **every** applicable `ValidationError`.
+    /// # Errors
+    ///
+    /// Returns [`Vec<ValidationError>`] if any of the three above conditions are violated.
+    ///
+    /// The resulting [`Vec`] contains **all** applicable [`ValidationError`]s in the following order:
+    /// - [`ValidationError::MissingPlayerStart`] if no [`Tile::PlayerStart`] is present
+    /// - [`ValidationError::MultiplePlayerStarts`] if multiple [`Tile::PlayerStart`] are present
+    /// - [`ValidationError::NoExit`] if no [`Tile::Exit`] is present
+    /// - [`ValidationError::NoFloor`] if no [`Tile::Floor`] is present
     ///
     /// # Important
     ///
@@ -177,7 +184,31 @@ impl DungeonMap {
     /// Build a `Vec<ValidationError>`, push to it for each failing condition,
     /// and return `Err(errors)` at the end if it is non-empty.
     pub fn validate(&self) -> Result<(), Vec<ValidationError>> {
-        todo!()
+        let mut errors = Vec::new();
+
+        let tile_count = self.count_tiles();
+
+        match tile_count.get(&Tile::PlayerStart) {
+            None | Some(0) => errors.push(ValidationError::MissingPlayerStart),
+            Some(1) => {}
+            Some(2..) => errors.push(ValidationError::MultiplePlayerStarts(
+                self.find_all(Tile::PlayerStart),
+            )),
+        }
+
+        if !tile_count.contains_key(&Tile::Exit) {
+            errors.push(ValidationError::NoExit);
+        }
+
+        if !tile_count.contains_key(&Tile::Floor) {
+            errors.push(ValidationError::NoFloor);
+        }
+
+        if errors.is_empty() {
+            Ok(())
+        } else {
+            Err(errors)
+        }
     }
 }
 
