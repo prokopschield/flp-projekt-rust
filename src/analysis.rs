@@ -5,6 +5,10 @@
 // You may add private helper functions.
 // ============================================================
 
+mod bitvec;
+
+pub use bitvec::{BitVec, BitVecError};
+
 use crate::model::{DungeonMap, Position};
 
 /// Returns the number of passable tiles reachable from `start` via
