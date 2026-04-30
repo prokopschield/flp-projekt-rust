@@ -4,7 +4,11 @@
 // You must implement the function body below.
 // ============================================================
 
+use std::fmt::Write;
+
 use crate::model::DungeonMap;
+use crate::reachable_floor_size;
+use crate::tile::Tile::{Door, Enemy, Exit, Floor, PlayerStart, Trap, Treasure, Wall};
 
 /// Generates a human-readable summary report for the given map.
 ///
@@ -53,8 +57,47 @@ use crate::model::DungeonMap;
 /// The tile label widths in the example above are not a coincidence —
 /// `"PlayerStart:"` is the longest label (12 chars + `:`). Pad all labels
 /// to the same width for alignment.
+#[must_use]
 pub fn generate_report(map: &DungeonMap) -> String {
-    todo!()
+    let mut a = "=== Dungeon Report ===\n".to_string();
+
+    writeln!(a, "Dimensions: {} x {}", map.width(), map.height()).unwrap_or_default();
+    writeln!(a, "Tiles:").unwrap_or_default();
+
+    let count = map.count_tiles();
+
+    for tile in [Wall, Floor, PlayerStart, Enemy, Treasure, Exit, Door, Trap] {
+        if let Some(&count) = count.get(&tile)
+            && count > 0
+        {
+            // format with colon
+            let tile = format!("{tile}:");
+
+            writeln!(a, "  {tile:14}{count:>4}").unwrap_or_default();
+        }
+    }
+
+    if let Err(err) = map.validate() {
+        writeln!(a, "Validation: FAILED").unwrap_or_default();
+
+        for err in err {
+            writeln!(a, "  - {err}").unwrap_or_default();
+        }
+    } else {
+        writeln!(a, "Validation: OK").unwrap_or_default();
+    }
+
+    write!(
+        a,
+        "Reachable floor from player: {}",
+        map.find_player_start()
+            .map_or(0, |position| reachable_floor_size(map, position))
+    )
+    .unwrap_or_default();
+
+    // using .unwrap_or_default() everywhere because .expect() is forbidden
+
+    a
 }
 
 // ── Unit tests ────────────────────────────────────────────────────────────────
