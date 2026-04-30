@@ -5,8 +5,10 @@
 // You may add private helper functions.
 // ============================================================
 
+mod bitmap;
 mod bitvec;
 
+pub use bitmap::{BitMap, BitMapError};
 pub use bitvec::{BitVec, BitVecError};
 
 use crate::model::{DungeonMap, Position};

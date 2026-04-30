@@ -3,6 +3,7 @@
 
 const BITS_PER_ITEM: usize = std::mem::size_of::<usize>() * 8;
 
+#[derive(Clone, Debug, Default, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct BitVec {
     items: Vec<usize>,
 }
