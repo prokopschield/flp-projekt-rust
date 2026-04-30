@@ -169,6 +169,20 @@ impl DungeonMap {
             .collect()
     }
 
+    /// Returns the [`Position`] of the first occurrence of `tile`.
+    ///
+    /// Searches rows in order, then columns in order.
+    ///
+    /// If the tile is not found, [`None`] is returned.
+    #[must_use]
+    pub fn find_tile(&self, tile: Tile) -> Option<Position> {
+        self.rows().enumerate().find_map(|(x, row)| {
+            row.iter()
+                .enumerate()
+                .find_map(move |(y, &t)| (tile == t).then_some((x, y)))
+        })
+    }
+
     // ── Validation ────────────────────────────────────────────────────────────
 
     /// Validates the structural integrity of the map.
