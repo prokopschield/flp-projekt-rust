@@ -183,6 +183,14 @@ impl DungeonMap {
         })
     }
 
+    /// Returns the [`Position`] of the first [`PlayerStart`](Tile::PlayerStart) [`Tile`].
+    ///
+    /// See [`DungeonMap::find_tile`] for ordering details.
+    #[must_use]
+    pub fn find_player_start(&self) -> Option<Position> {
+        self.find_tile(Tile::PlayerStart)
+    }
+
     // ── Validation ────────────────────────────────────────────────────────────
 
     /// Validates the structural integrity of the map.
