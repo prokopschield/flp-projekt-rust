@@ -5,6 +5,8 @@
 // methods below.
 // ============================================================
 
+use std::fmt::Display;
+
 use crate::error::ParseError;
 
 /// A single tile in a dungeon map.
@@ -65,6 +67,23 @@ impl Tile {
     #[must_use]
     pub const fn is_passable(&self) -> bool {
         !matches!(self, Self::Wall)
+    }
+}
+
+impl Display for Tile {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        use Tile::{Door, Enemy, Exit, Floor, PlayerStart, Trap, Treasure, Wall};
+
+        match self {
+            Wall => f.pad("Wall"),
+            Floor => f.pad("Floor"),
+            PlayerStart => f.pad("PlayerStart"),
+            Enemy => f.pad("Enemy"),
+            Treasure => f.pad("Treasure"),
+            Exit => f.pad("Exit"),
+            Door => f.pad("Door"),
+            Trap => f.pad("Trap"),
+        }
     }
 }
 
