@@ -6,3 +6,11 @@ rust-version = "1.87"
 
 # No external dependencies — std only.
 [dependencies]
+
+[lints]
+clippy.expect_used = "deny"
+clippy.nursery.level = "warn"
+clippy.nursery.priority = -1
+clippy.pedantic.level = "warn"
+clippy.pedantic.priority = -1
+clippy.unwrap_used = "deny"
