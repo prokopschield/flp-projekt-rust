@@ -1,7 +1,7 @@
 // Bit Vector implementation
 // made for this project, so probably not optimal
 
-const BITS_PER_ITEM: usize = std::mem::size_of::<usize>();
+const BITS_PER_ITEM: usize = std::mem::size_of::<usize>() * 8;
 
 pub struct BitVec {
     items: Vec<usize>,
