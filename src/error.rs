@@ -13,7 +13,7 @@ use crate::model::Position;
 // ── Parse errors ─────────────────────────────────────────────────────────────
 
 /// Errors that can occur while parsing a dungeon map string.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum ParseError {
     /// The input string was empty or contained only whitespace/newlines.
     EmptyInput,
@@ -39,22 +39,21 @@ pub enum ParseError {
 impl fmt::Display for ParseError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            ParseError::EmptyInput => {
+            Self::EmptyInput => {
                 write!(f, "map input is empty")
             }
-            ParseError::JaggedMap { row, expected, found } => {
+            Self::JaggedMap {
+                row,
+                expected,
+                found,
+            } => {
                 write!(
                     f,
-                    "row {} has width {} but expected {} (from row 0)",
-                    row, found, expected
+                    "row {row} has width {found} but expected {expected} (from row 0)"
                 )
             }
-            ParseError::UnknownTile { c, row, col } => {
-                write!(
-                    f,
-                    "unknown tile character {:?} at row {}, col {}",
-                    c, row, col
-                )
+            Self::UnknownTile { c, row, col } => {
+                write!(f, "unknown tile character {c:?} at row {row}, col {col}")
             }
         }
     }
@@ -63,7 +62,7 @@ impl fmt::Display for ParseError {
 // ── Validation errors ─────────────────────────────────────────────────────────
 
 /// Errors that can be detected when validating a successfully-parsed map.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum ValidationError {
     /// No `PlayerStart` tile was found. Exactly one is required.
     MissingPlayerStart,
@@ -83,16 +82,16 @@ pub enum ValidationError {
 impl fmt::Display for ValidationError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            ValidationError::MissingPlayerStart => {
+            Self::MissingPlayerStart => {
                 write!(f, "Missing PlayerStart")
             }
-            ValidationError::MultiplePlayerStarts(positions) => {
-                write!(f, "Multiple PlayerStart tiles at {:?}", positions)
+            Self::MultiplePlayerStarts(positions) => {
+                write!(f, "Multiple PlayerStart tiles at {positions:?}")
             }
-            ValidationError::NoExit => {
+            Self::NoExit => {
                 write!(f, "No Exit found")
             }
-            ValidationError::NoFloor => {
+            Self::NoFloor => {
                 write!(f, "No Floor tiles found")
             }
         }

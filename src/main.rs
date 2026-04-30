@@ -15,7 +15,7 @@ use std::env;
 use std::fs;
 use std::process;
 
-use dungeon_scribe::{generate_report, DungeonMap};
+use dungeon_scribe::{DungeonMap, generate_report};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -31,7 +31,7 @@ fn main() {
     let contents = match fs::read_to_string(path) {
         Ok(s) => s,
         Err(e) => {
-            eprintln!("Error: could not read '{}': {}", path, e);
+            eprintln!("Error: could not read '{path}': {e}");
             process::exit(1);
         }
     };
@@ -39,7 +39,7 @@ fn main() {
     let map = match DungeonMap::parse(&contents) {
         Ok(m) => m,
         Err(e) => {
-            eprintln!("Parse error: {}", e);
+            eprintln!("Parse error: {e}");
             process::exit(1);
         }
     };

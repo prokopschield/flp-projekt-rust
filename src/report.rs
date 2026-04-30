@@ -103,6 +103,7 @@ pub fn generate_report(map: &DungeonMap) -> String {
 // ── Unit tests ────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
+#[allow(clippy::unwrap_used)]
 mod tests {
     use super::*;
     use crate::model::DungeonMap;

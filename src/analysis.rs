@@ -94,6 +94,7 @@ pub fn reachable_floor_size(map: &DungeonMap, start: Position) -> usize {
 // ── Unit tests ────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
+#[allow(clippy::unwrap_used)]
 mod tests {
     use super::*;
     use crate::model::DungeonMap;

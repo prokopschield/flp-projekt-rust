@@ -22,7 +22,7 @@ pub type Position = (usize, usize);
 ///
 /// The grid is stored as a `Vec` of rows, each row being a `Vec<Tile>`.
 /// `width` is the number of columns; `height` is the number of rows.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct DungeonMap {
     tiles: Vec<Vec<Tile>>,
     width: usize,
@@ -113,12 +113,14 @@ impl DungeonMap {
     }
 
     /// Returns the width of the map (number of columns).
-    pub fn width(&self) -> usize {
+    #[must_use]
+    pub const fn width(&self) -> usize {
         self.width
     }
 
     /// Returns the height of the map (number of rows).
-    pub fn height(&self) -> usize {
+    #[must_use]
+    pub const fn height(&self) -> usize {
         self.height
     }
 
@@ -248,6 +250,7 @@ impl DungeonMap {
 // ── Unit tests ────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
+#[allow(clippy::unwrap_used)]
 mod tests {
     use super::*;
 
